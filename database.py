@@ -5,6 +5,7 @@ from datetime import datetime
 
 DB_NAME = "auth.db"
 LOG_FILE = "auth.log"
+DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
 def get_connection(db_name=DB_NAME):
@@ -50,7 +51,7 @@ def parse_line(line):
     if len(parts) != 4:
         raise ValueError(f"ожидалось 4 поля, найдено {len(parts)}")
     ts, username, ip, result = parts
-    datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
+    datetime.strptime(ts, DATETIME_FORMAT)
     ipaddress.ip_address(ip)
     if not username:
         raise ValueError("пустое имя пользователя")

@@ -13,7 +13,7 @@ import analyzer
 import database
 import nosql
 
-DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+DATETIME_FORMAT = database.DATETIME_FORMAT
 
 
 def parse_args():

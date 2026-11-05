@@ -3,18 +3,22 @@ import json
 from collections import Counter
 from datetime import datetime
 
-from database import LOG_FILE, parse_line
+from database import DATETIME_FORMAT, LOG_FILE, parse_line
 
 # Отдельное пространство имён не затрагивает ключи других приложений в Redis.
 KEY_PREFIX = "auth-log-analyzer:failed:"
-DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
 def read_failures(path=LOG_FILE, start=None, end=None):
     """Возвращает IP неудачных попыток, при необходимости ограничивая период."""
-    ips = []
+    if bool(start) != bool(end):
+        raise ValueError("start и end нужно указывать вместе")
     start_dt = datetime.strptime(start, DATETIME_FORMAT) if start else None
     end_dt = datetime.strptime(end, DATETIME_FORMAT) if end else None
+    if start_dt and start_dt > end_dt:
+        raise ValueError("start не может быть позже end")
+
+    ips = []
     with open(path, encoding="utf-8") as f:
         for line in f:
             if not line.strip():
